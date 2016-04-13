@@ -25,27 +25,55 @@ board.on("ready", function() {
     var peakToPeak = 0;
     var volts = 0;
     
+    
+    var micVal = 0;
+    mic.on("data", function () {
+        micVal = this.value;
+    });
+    
     // if above a certain threshold, output to speaker
     
-    // otherwise, calculate a threshold
-    this.wait(1, function() {
-        mic.on("data", function() {
-            if (count < 50) {
-                if (this.value < 1024) {
-                    if (this.value > signalMax) {
-                        signalMax = this.value;
-                    } else if (this.value < signalMin) {
-                        signalMin = this.value;
-                    }
+    // otherwise, calculate a threshold4
+    this.loop(1, function () {
+        if (count < 50) {
+            if (micVal < 1024) {
+                if (micVal > signalMax) {
+                    signalMax = micVal;
+                } else if (micVal < signalMin) {
+                    signalMin = micVal;
                 }
-                count++;
-            } else {
-                peakToPeak = signalMax - signalMin;
-                volts = peakToPeak * 3.3 / 1024;
-                console.log(volts);       
             }
-        });
+            count++;
+        } else {
+            peakToPeak = signalMax - signalMin;
+            volts = peakToPeak * 3.3 / 1024;
+            console.log(volts);
+            
+            count = 0;
+            signalMax = 0;
+            signalMin = 1024;
+        }
     });
+    
+    
+    // this.wait(1, function() {
+    //     mic.on("data", function() {
+    //         if (count < 50) {
+    //             if (this.value < 1024) {
+    //                 if (this.value > signalMax) {
+    //                     signalMax = this.value;
+    //                 } else if (this.value < signalMin) {
+    //                     signalMin = this.value;
+    //                 }
+    //             }
+    //             count++;
+    //         } else {
+    //             peakToPeak = signalMax - signalMin;
+    //             volts = peakToPeak * 3.3 / 1024;
+    //             console.log(volts);       
+    //         }
+    //     });
+    // });
     // peakToPeak = signalMax - signalMin;
     // var volts = peakToPeak * 3.3 / 1024;
     // console.log(volts);
