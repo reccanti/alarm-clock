@@ -35,6 +35,8 @@ board.on("ready", function() {
     
     // otherwise, calculate a threshold4
     this.loop(1, function () {
+        
+        // calculate the normalized voltage
         if (count < 50) {
             if (micVal < 1024) {
                 if (micVal > signalMax) {
@@ -53,6 +55,15 @@ board.on("ready", function() {
             signalMax = 0;
             signalMin = 1024;
         }
+        
+        // output the value to the speaker
+        
+    });
+    
+    
+    this.loop(time, function() {
+        var out = toSpeakerFreq(volts, .01, .2, 370, 784);
+        (out === 1) ? piezo.frequency(988, time) : piezo.noTone(time);
     });
     
     
