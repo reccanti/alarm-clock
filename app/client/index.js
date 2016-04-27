@@ -35,8 +35,6 @@ var normalizeMic = function (range, min, max, val) {
  */
 var toSpeakerFreq = function (val, inMin, inMax, outMin, outMax) {
     var range = outMax - outMin;
-    // var num = (val - inMin) / (inMax - inMin);
-    // var returnVal = (num > 0.5) ? 1 : 0;
     var num = range * (val - inMin) / (inMax - inMin) + outMin;
     num = (num < outMin) ? outMin : num;
     num = (num > outMax) ? outMax : num;
@@ -90,15 +88,9 @@ var mapToNote = function (val, scale, threshold) {
 
 
 board.on("ready", function() {
-// <<<<<<< HEAD
-//     var mic = new five.Sensor(MIC_PIN),
-//         piezo = new five.Piezo(SPEAKER_PIN);
-//     start = new Date();
-// =======
     var mic = new five.Sensor("A0");
     var piezo = new five.Piezo(2);
     var time = 250;
-// >>>>>>> normalized-mic
 
     start = new Date();
     
@@ -110,14 +102,6 @@ board.on("ready", function() {
     
     console.log(five.Piezo.Notes)
     var startTime = millis();
-    // this.loop(1, function() {
-    //     resample(micVal, signalMin, signalMax, startTime);
-    // });
-    
-    
-    // // if above a certain threshold, output to speaker
-    
-    // otherwise, calculate a threshold4
     
     /**
      * This loop samples the microphones input and
@@ -149,7 +133,6 @@ board.on("ready", function() {
      */
     this.loop(time, function() {
         var out = toSpeakerFreq(volts, .018, .1, 0, 1047);
-        // console.log(out);
         var mapped = mapToNote(out, MAJOR_SCALE, 262);
         if (mapped > 0) {
             piezo.frequency(mapped, time);
@@ -157,63 +140,4 @@ board.on("ready", function() {
             piezo.noTone();
         }
     });
-    
-    
-    // this.wait(1, function() {
-    //     mic.on("data", function() {
-    //         if (count < 50) {
-    //             if (this.value < 1024) {
-    //                 if (this.value > signalMax) {
-    //                     signalMax = this.value;
-    //                 } else if (this.value < signalMin) {
-    //                     signalMin = this.value;
-    //                 }
-    //             }
-    //             count++;
-    //         } else {
-    //             peakToPeak = signalMax - signalMin;
-    //             volts = peakToPeak * 3.3 / 1024;
-    //             console.log(volts);       
-    //         }
-    //     });
-    // });
-    // peakToPeak = signalMax - signalMin;
-    // var volts = peakToPeak * 3.3 / 1024;
-    // console.log(volts);
-
-
-    // collect data for 50 mS
-    //    while (millis() - startMillis < sampleWindow)
-    //    {
-    //       sample = analogRead(0);
-    //       if (sample < 1024)  // toss out spurious readings
-    //       {
-    //          if (sample > signalMax)
-    //          {
-    //             signalMax = sample;  // save just the max levels
-    //          }
-    //          else if (sample < signalMin)
-    //          {
-    //             signalMin = sample;  // save just the min levels
-    //          }
-    //       }
-    //    }
-    //    peakToPeak = signalMax - signalMin;  // max - min = peak-peak amplitude
-    //    double volts = (peakToPeak * 3.3) / 1024;  // convert to volts
-
-
-
-    // this.wait(time, function() {
-
-    //     // if above a certain threshhold, output the value
-
-    //     // otherwise, use the data 
-    //     mic.on("data", function() {
-    //         // var num = normalizeMic(30, 330, 380, this.value);
-    //         var num = toSpeakerFreq(this.value, 320, 360, 370, 784);
-    //         console.log(num);
-    //         (num === 1) ? piezo.frequency(988, time) : piezo.noTone(time);
-    //     });
-    // });
-
 });
