@@ -1,0 +1,56 @@
+#!/usr/bin/env node
+
+const http = require('http');
+const createApp = require('../app');
+
+const argv = require('yargs')
+       .usage('Usage: phone <command> [options]')
+       .command('server', 'Bootstraps a server', function (yargs) {
+           return yargs
+            .option('p', {
+                description: 'port to open server on',
+                alias: 'port'
+            })
+            .demand('p');
+       })
+       .command('client', 'Bootstraps a client', function (yargs) {
+           return yargs
+            .option('a', {
+                description: 'address to connect client to',
+                alias: 'address'
+            })
+            .option('n', {
+                description: 'name of client',
+                alias: 'name'
+            })
+            .demand('a');
+       })
+       .demand(1, "Must run either 'phone server' or 'phone client' to use.")
+       .string(['port', 'address', 'name'])
+       .help('help')
+       .alias('h', 'help')
+       .alias('version', 'v')
+       .example('phone server -p 5000', 'Bootstraps a server on port \'5000\'')
+       .example('phone client -a http://localhost:5000', 'Bootstraps a client that will connect to \'https://localhost:5000\'')
+       .epilog('For more information, visit https://github.com/reccanti/arduino-iphone')
+       .showHelpOnFail(true)
+       .argv;
+
+var type = argv._[0]
+var app = createApp(type, argv);
+
+const PORT = argv.port || process.env.NODE_PORT || 9000;
+var server = http.Server(app);
+
+var io = app.io;
+if (io) {
+    io.attach(server);
+}
+
+server.listen(PORT, function (err) {
+    if (err) {
+        console.error(err);
+        throw err;
+    }
+    console.log ('Listening on port ' + PORT);
+})
