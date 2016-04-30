@@ -1,8 +1,15 @@
-const server = require('http').createServer();
-const io = require('socket.io')(server);
+var http = require('http');
+var socketio = require('socket.io');
 
-io.on('connection', function (socket) {
-    console.log(socket);
-});
-
-server.listen(3000);
+module.exports = function (options) {
+    var io = socketio();
+    
+    io.on('connection', function (socket) {
+        socket.on('talking', function (data) {
+            console.log ('Received data from ' + data.name + '@' + data.id + '. Sending to others...');
+            socket.emit('listening', data);
+        });
+    });
+    
+    return io;
+};

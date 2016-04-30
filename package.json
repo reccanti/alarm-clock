@@ -1,17 +1,25 @@
 {
-  "name": "alarm-clock",
-  "version": "1.0.0",
-  "description": "",
+  "name": "arduino-iphone",
+  "version": "0.1.0",
+  "description": "A client-server communication gateway for Arduino and Node.js",
   "main": "index.js",
+  "bin": {
+    "phone": "bin/bootstrap"
+  },
   "scripts": {
-    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "contributors": [
+    "Aaron Sky <aaronsky@skyaaron.com> (http://skyaaron.com)",
+    "Ben Wilcox <reccanti@gmail.com> (http://benjwilcox.com/)"
+  ],
+  "license": "MIT",
+  "preferGlobal": true,
   "dependencies": {
+    "express": "^4.13.4",
     "johnny-five": "^0.9.39",
     "socket.io": "^1.4.5",
-    "socket.io-client": "^1.4.5"
+    "socket.io-client": "^1.4.5",
+    "yargs": "^4.6.0"
   }
 }
